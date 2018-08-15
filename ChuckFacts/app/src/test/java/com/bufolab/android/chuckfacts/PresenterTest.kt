@@ -1,6 +1,5 @@
 package com.bufolab.android.chuckfacts
 
-import com.bufolab.android.chuckfacts.common.SchedulersProvider
 import com.bufolab.android.chuckfacts.domain.model.ChuckFact
 import com.bufolab.android.chuckfacts.domain.usecase.AcceptFact
 import com.bufolab.android.chuckfacts.domain.usecase.GetFacts
@@ -14,6 +13,7 @@ import io.reactivex.schedulers.Schedulers
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.verify
@@ -38,24 +38,22 @@ class PresenterTest {
     lateinit var getSavedFacts: GetSavedFacts
 
     @Mock
-    lateinit var scheduler: SchedulersProvider
-
-    @Mock
     lateinit var view: MainView
 
     private lateinit var presenter: MainPresenter
     private lateinit var testScheduler: Scheduler
 
     var chuck =ChuckFact("11", arrayListOf(),"","","")
+
     @Before
     fun prepare() {
         MockitoAnnotations.initMocks(this)
-
 
         testScheduler = Schedulers.trampoline()
 
         //when execute is called perform a fake use case
         Mockito.`when`(acceptUseCase.execute()).thenReturn(Observable.just(Unit))
+
         Mockito.`when`(getJokesUseCase.execute()).thenReturn(
                 Observable.just( chuck))
 
@@ -73,8 +71,10 @@ class PresenterTest {
         val chuckJoke = ChuckFact("", arrayListOf(), "", "", "")
         presenter.onItemAccepted(chuckJoke)
 
-        //testScheduler.
-        verify(view).setAmountSavedJokes(10) //verify we set in the view the correct value
+        verify(view).setAmountSavedJokes(10) //verify we set correct saved items
+
+        //presenter requests a new item since the view requires to fill the gap of the accepted item
+        verify(view).showItems(ArgumentMatchers.anyList())
     }
 
 
