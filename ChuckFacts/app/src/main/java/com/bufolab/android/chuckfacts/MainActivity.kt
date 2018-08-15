@@ -9,11 +9,12 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import com.bufolab.android.chuckfacts.data.LocalRepository
 import com.bufolab.android.chuckfacts.domain.model.ChuckFact
-import com.bufolab.android.chuckfacts.presenter.MainPresenterImpl
+import com.bufolab.android.chuckfacts.presenter.MainPresenter
 import com.bufolab.android.chuckfacts.view.ChuckFactAdapter
 import com.bufolab.android.chuckfacts.view.DeckLayoutManager
 import com.bufolab.android.chuckfacts.view.MainView
 import com.bufolab.android.chuckfacts.view.helper.MyItemTouch
+import javax.inject.Inject
 
 /**
  * Created by Bufolab on 12/08/2018.
@@ -23,13 +24,15 @@ class MainActivity : AppCompatActivity(), MainView {
 
 
     lateinit var stackFilmAdapter: ChuckFactAdapter
-    lateinit var mainViewPresenter: MainPresenterImpl
+
+    @Inject
+    lateinit var mainViewPresenter: MainPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initalization()
+        initialization()
 
         bindUI()
     }
@@ -47,13 +50,15 @@ class MainActivity : AppCompatActivity(), MainView {
     }
 
 
-    //as we dont use dagger, we will initalize the Repository here. Should be in the Application.
+    //as we dont use dagger, we will initialize the Repository here. Should be in the Application.
     //but this is is just for fun.
-    private fun initalization() {
+    private fun initialization() {
 
         LocalRepository(applicationContext)
 
-        mainViewPresenter = MainPresenterImpl(this)
+        //inject dependencies
+        ChuckFactsApplication.component.inject(this)
+        mainViewPresenter.setView(this)
     }
 
     override fun onResume() {

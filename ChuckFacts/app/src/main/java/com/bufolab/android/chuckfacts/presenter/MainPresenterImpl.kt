@@ -4,15 +4,18 @@ import com.bufolab.android.chuckfacts.domain.model.ChuckFact
 import com.bufolab.android.chuckfacts.domain.usecase.AcceptFact
 import com.bufolab.android.chuckfacts.domain.usecase.GetFacts
 import com.bufolab.android.chuckfacts.view.MainView
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 /**
  * Created by Bufolab on 12/08/2018.
  */
 
-open class MainPresenterImpl(val view: MainView) : MainPresenter {
+open class  MainPresenterImpl  @Inject constructor(var getJokesUseCase: GetFacts,
+                                                   var acceptItem: AcceptFact): MainPresenter {
+
+    lateinit var mainview: MainView
+
 
     private var composite: MutableList<Disposable> = mutableListOf()
 
@@ -24,12 +27,16 @@ open class MainPresenterImpl(val view: MainView) : MainPresenter {
         composite.forEach { it.dispose() }
     }
 
+    override fun setView(view: MainView) {
+        mainview = view
+    }
 
     override fun onItemAccepted(fact: ChuckFact) {
-        val subscribe = AcceptFact(fact).execute()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe {
-                    view.setAmountSavedJokes(it.toInt())
+        acceptItem.setChuckFact(fact)
+
+        val subscribe = acceptItem.execute()
+                .subscribe {
+                    mainview.setAmountSavedJokes(it.toInt())
                     requestItems(1)
                 }
 
@@ -41,9 +48,9 @@ open class MainPresenterImpl(val view: MainView) : MainPresenter {
         //do nothing
     }
 
-
-    private fun requestItems(quantity: Long = 1) {
-        val subscribe = GetFacts(quantity).execute()
+    private fun requestItems(numberJokes: Int = 1) {
+        getJokesUseCase.numberJokes = numberJokes
+        val subscribe = getJokesUseCase.execute()
                 .subscribe(
                         { loadItemsSuccess(it) },
                         { loadItemsFailue(it) }
@@ -53,12 +60,12 @@ open class MainPresenterImpl(val view: MainView) : MainPresenter {
     }
 
     private fun loadItemsSuccess(jokes: ChuckFact) {
-        view.hideLoading()
-        view.showItems(arrayListOf(jokes))
+        mainview.hideLoading()
+        mainview.showItems(arrayListOf(jokes))
     }
 
     private fun loadItemsFailue(it: Throwable) {
-        view.hideLoading()
+        mainview.hideLoading()
         it.printStackTrace()
     }
 }
