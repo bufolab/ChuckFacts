@@ -1,4 +1,4 @@
-package com.bufolab.android.chuckfacts.domain.livemodel
+package com.bufolab.android.chuckfacts.livemodel
 
 import com.bufolab.android.chuckfacts.domain.model.ChuckFact
 

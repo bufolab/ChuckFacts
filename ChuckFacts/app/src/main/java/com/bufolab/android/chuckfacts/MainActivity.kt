@@ -10,8 +10,8 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.bufolab.android.chuckfacts.data.LocalRepository
-import com.bufolab.android.chuckfacts.domain.livemodel.ChuckFactModel
-import com.bufolab.android.chuckfacts.domain.livemodel.SavedFactModel
+import com.bufolab.android.chuckfacts.livemodel.ChuckFactModel
+import com.bufolab.android.chuckfacts.livemodel.SavedFactModel
 import com.bufolab.android.chuckfacts.domain.model.ChuckFact
 import com.bufolab.android.chuckfacts.view.ChuckFactAdapter
 import com.bufolab.android.chuckfacts.view.DeckLayoutManager

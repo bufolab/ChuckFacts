@@ -2,8 +2,8 @@ package com.bufolab.android.chuckfacts.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.bufolab.android.chuckfacts.domain.livemodel.ChuckFactModel
-import com.bufolab.android.chuckfacts.domain.livemodel.SavedFactModel
+import com.bufolab.android.chuckfacts.livemodel.ChuckFactModel
+import com.bufolab.android.chuckfacts.livemodel.SavedFactModel
 import com.bufolab.android.chuckfacts.domain.model.ChuckFact
 import com.bufolab.android.chuckfacts.domain.usecase.AcceptFact
 import com.bufolab.android.chuckfacts.domain.usecase.GetFacts

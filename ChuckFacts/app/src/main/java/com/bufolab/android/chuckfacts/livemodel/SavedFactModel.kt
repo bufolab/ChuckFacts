@@ -1,4 +1,4 @@
-package com.bufolab.android.chuckfacts.domain.livemodel
+package com.bufolab.android.chuckfacts.livemodel
 
 /**
  * Created by Bufolab on 15/08/2018.
