@@ -145,12 +145,18 @@ class UseCaseTest {
         // be sure there is no Error
         val chuckJoke = ChuckFact("", arrayListOf(), "", "", "")
         acceptUseCase.fact = chuckJoke
-        acceptUseCase.execute().test()
+
+
+        `when`(repository.saveChuckJoke(chuckJoke)).thenReturn(
+                Observable.just(Unit))
+
+
+        acceptUseCase.execute()
+                .test()
                 .assertNoErrors()
-                .assertValue(1)
 
         //check indeed usecase interacted with loadSavedChuckJoke and saveChuckJoke only once
-        verify(repository).loadSavedChuckJoke()
+
         verify(repository).saveChuckJoke(chuckJoke)
     }
 }

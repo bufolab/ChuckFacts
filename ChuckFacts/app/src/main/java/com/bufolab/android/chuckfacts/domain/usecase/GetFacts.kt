@@ -11,7 +11,8 @@ import javax.inject.Inject
 /**
  * Created by Bufolab on 12/08/2018.
  */
-class GetFacts @Inject constructor(val service:ChuckFactService, val schedulers: SchedulersProvider): UseCase<ChuckFact> {
+class GetFacts @Inject constructor(val service:ChuckFactService,
+                                   val schedulers: SchedulersProvider): UseCase<ChuckFact> {
 
     val DEFAULT_NUMBER_JOKES = 1
 

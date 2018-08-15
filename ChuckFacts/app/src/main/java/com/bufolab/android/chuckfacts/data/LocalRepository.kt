@@ -32,13 +32,15 @@ class LocalRepository(private val context: Context) : Repository {
         }
     }
 
-    override fun saveChuckJoke(fact: ChuckFact) {
+    override fun saveChuckJoke(fact: ChuckFact) : Observable<Unit> {
         val settings: SharedPreferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
 
         val toJson = Gson().toJson(fact)
         val stringSet = settings.getStringSet(SAVED_FACTS, mutableSetOf())
         stringSet.add(toJson)
         settings.edit().putStringSet(SAVED_FACTS, stringSet).apply()
+
+        return Observable.just(Unit) //maybe return Success or failure?
     }
 
     override fun loadSavedChuckJoke(): Observable<List<ChuckFact>> {

@@ -2,14 +2,14 @@ package com.bufolab.android.chuckfacts.view.helper
 
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
-import com.bufolab.android.chuckfacts.presenter.MainPresenter
 import com.bufolab.android.chuckfacts.view.ChuckFactAdapter
+import com.bufolab.android.chuckfacts.viewmodel.MainViewModel
 
 /**
  * Created by Bufolab on 12/08/2018.
  */
 
-class MyItemTouch(var presenter: MainPresenter, val adapter: ChuckFactAdapter) : ItemTouchHelper.Callback() {
+class MyItemTouch(var viewModel: MainViewModel, val adapter: ChuckFactAdapter) : ItemTouchHelper.Callback() {
 
 
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
@@ -26,13 +26,13 @@ class MyItemTouch(var presenter: MainPresenter, val adapter: ChuckFactAdapter) :
 
         when (direction) {
             ItemTouchHelper.LEFT -> {
-                presenter.onItemRejected(adapter.getItemAt(adapterPosition))
+                viewModel.onItemRejected(adapter.getItemAt(adapterPosition))
                 val toMutableList = adapter.list.toMutableList()
                 toMutableList.removeAt(adapterPosition)
                 adapter.list = toMutableList
             }
             ItemTouchHelper.RIGHT -> {
-                presenter.onItemAccepted(adapter.getItemAt(adapterPosition))
+                viewModel.onItemAccepted(adapter.getItemAt(adapterPosition))
                 val toMutableList = adapter.list.toMutableList()
                 toMutableList.removeAt(adapterPosition)
                 adapter.list = toMutableList

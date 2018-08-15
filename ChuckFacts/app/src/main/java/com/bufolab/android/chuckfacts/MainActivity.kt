@@ -1,5 +1,7 @@
 package com.bufolab.android.chuckfacts
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
@@ -8,13 +10,17 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.bufolab.android.chuckfacts.data.LocalRepository
+import com.bufolab.android.chuckfacts.domain.livemodel.ChuckFactModel
+import com.bufolab.android.chuckfacts.domain.livemodel.SavedFactModel
 import com.bufolab.android.chuckfacts.domain.model.ChuckFact
-import com.bufolab.android.chuckfacts.presenter.MainPresenter
 import com.bufolab.android.chuckfacts.view.ChuckFactAdapter
 import com.bufolab.android.chuckfacts.view.DeckLayoutManager
 import com.bufolab.android.chuckfacts.view.MainView
 import com.bufolab.android.chuckfacts.view.helper.MyItemTouch
+import com.bufolab.android.chuckfacts.viewmodel.MainViewModel
+import com.bufolab.android.chuckfacts.viewmodel.MainViewModelFactory
 import javax.inject.Inject
+
 
 /**
  * Created by Bufolab on 12/08/2018.
@@ -23,10 +29,11 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity(), MainView {
 
 
+
     lateinit var stackFilmAdapter: ChuckFactAdapter
 
     @Inject
-    lateinit var mainViewPresenter: MainPresenter
+    lateinit var mainViewModelFactory: MainViewModelFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,19 +41,50 @@ class MainActivity : AppCompatActivity(), MainView {
 
         initialization()
 
-        bindUI()
+       var mainViewModel = injectMVVM()
+
+        bindUI(mainViewModel)
+
+        mainViewModel.onInitialize()
     }
 
-    private fun bindUI() {
+    private fun injectMVVM(): MainViewModel {
+
+        val savedFactsObserver = Observer<SavedFactModel> { model ->
+            // Update the UI, in this case, a TextView.
+            var m = model!!
+            if(m.success){
+                setAmountSavedJokes(m.savedFacts)
+            }
+        }
+
+        val getFactsObserver = Observer<ChuckFactModel> { model ->
+            // Update the UI, in this case, a TextView.
+            var m = model!!
+            if(m.success){
+                showItems(arrayListOf(m.fact!!))
+            }
+        }
+
+        var mainViewModel =  ViewModelProviders.of(this, mainViewModelFactory).get(MainViewModel::class.java)
+        mainViewModel.savedFactsData.observe(this,savedFactsObserver)
+        mainViewModel.factData.observe(this,getFactsObserver)
+
+        return mainViewModel
+
+    }
+
+    private fun bindUI(mainViewModel: MainViewModel) {
         val v = findViewById<RecyclerView>(R.id.recycler_view)
         v.layoutManager = DeckLayoutManager( true)
 
         stackFilmAdapter = ChuckFactAdapter(this)
         v.adapter = stackFilmAdapter
 
-        val itemTouchHelper = ItemTouchHelper(MyItemTouch(mainViewPresenter, stackFilmAdapter))
+        val itemTouchHelper = ItemTouchHelper(MyItemTouch(mainViewModel, stackFilmAdapter))
         itemTouchHelper.attachToRecyclerView(v)
         stackFilmAdapter.notifyDataSetChanged()
+
     }
 
 
@@ -58,19 +96,11 @@ class MainActivity : AppCompatActivity(), MainView {
 
         //inject dependencies
         ChuckFactsApplication.component.inject(this)
-        mainViewPresenter.setView(this)
     }
 
-    override fun onResume() {
-        super.onResume()
-        mainViewPresenter.onInitialize()
-    }
 
-    override fun onStop() {
-        super.onStop()
-        mainViewPresenter.onFinish()
-    }
     override fun showItems(list: List<ChuckFact>) {
+        hideLoading()
         stackFilmAdapter.list =  arrayListOf(stackFilmAdapter.list,list).flatten()
     }
 
