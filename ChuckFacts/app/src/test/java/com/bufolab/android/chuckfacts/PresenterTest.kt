@@ -4,6 +4,7 @@ import com.bufolab.android.chuckfacts.common.SchedulersProvider
 import com.bufolab.android.chuckfacts.domain.model.ChuckFact
 import com.bufolab.android.chuckfacts.domain.usecase.AcceptFact
 import com.bufolab.android.chuckfacts.domain.usecase.GetFacts
+import com.bufolab.android.chuckfacts.domain.usecase.GetSavedFacts
 import com.bufolab.android.chuckfacts.presenter.MainPresenter
 import com.bufolab.android.chuckfacts.presenter.MainPresenterImpl
 import com.bufolab.android.chuckfacts.view.MainView
@@ -34,6 +35,9 @@ class PresenterTest {
     lateinit var getJokesUseCase: GetFacts
 
     @Mock
+    lateinit var getSavedFacts: GetSavedFacts
+
+    @Mock
     lateinit var scheduler: SchedulersProvider
 
     @Mock
@@ -42,20 +46,24 @@ class PresenterTest {
     private lateinit var presenter: MainPresenter
     private lateinit var testScheduler: Scheduler
 
+    var chuck =ChuckFact("11", arrayListOf(),"","","")
     @Before
     fun prepare() {
         MockitoAnnotations.initMocks(this)
-        Mockito.`when`(acceptUseCase.execute()).thenReturn(Observable.just(1))
+
 
         testScheduler = Schedulers.trampoline()
 
         //when execute is called perform a fake use case
-        Mockito.`when`(acceptUseCase.execute()).thenReturn(Observable.just(10))
+        Mockito.`when`(acceptUseCase.execute()).thenReturn(Observable.just(Unit))
         Mockito.`when`(getJokesUseCase.execute()).thenReturn(
-                Observable.just(
-                        ChuckFact("11", arrayListOf(),"","","")))
+                Observable.just( chuck))
 
-        presenter = MainPresenterImpl(getJokesUseCase,acceptUseCase)
+        Mockito.`when`(getSavedFacts.execute()).thenReturn(
+                Observable.just(arrayListOf(chuck,chuck,chuck,chuck,chuck,
+                                            chuck,chuck,chuck,chuck,chuck)))
+
+        presenter = MainPresenterImpl(getJokesUseCase,acceptUseCase,getSavedFacts)
         presenter.setView(view)
     }
 

@@ -2,6 +2,7 @@ package com.bufolab.android.chuckfacts.dagger
 
 import com.bufolab.android.chuckfacts.domain.usecase.AcceptFact
 import com.bufolab.android.chuckfacts.domain.usecase.GetFacts
+import com.bufolab.android.chuckfacts.domain.usecase.GetSavedFacts
 import com.bufolab.android.chuckfacts.presenter.MainPresenter
 import com.bufolab.android.chuckfacts.presenter.MainPresenterImpl
 import dagger.Module
@@ -14,7 +15,9 @@ import dagger.Provides
 class PresenterModule {
 
     @Provides
-    fun provideMainPresenter(useCase: GetFacts, acceptUsecase:AcceptFact):
-            MainPresenter = MainPresenterImpl(useCase,acceptUsecase)
+    fun provideMainPresenter(useCase: GetFacts,
+                             acceptUsecase:AcceptFact,
+                             getSavedFacts: GetSavedFacts):MainPresenter
+             = MainPresenterImpl(useCase,acceptUsecase,getSavedFacts)
 
 }

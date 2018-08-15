@@ -147,10 +147,8 @@ class UseCaseTest {
         acceptUseCase.fact = chuckJoke
         acceptUseCase.execute().test()
                 .assertNoErrors()
-                .assertValue(1)
 
         //check indeed usecase interacted with loadSavedChuckJoke and saveChuckJoke only once
-        verify(repository).loadSavedChuckJoke()
         verify(repository).saveChuckJoke(chuckJoke)
     }
 }

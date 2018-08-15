@@ -8,7 +8,7 @@ import io.reactivex.Observable
  */
 interface Repository {
 
-    fun saveChuckJoke(fact: ChuckFact)
+    fun saveChuckJoke(fact: ChuckFact):  Observable<Unit>
 
     fun loadSavedChuckJoke() : Observable<List<ChuckFact>>
 }

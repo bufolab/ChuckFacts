@@ -3,6 +3,7 @@ package com.bufolab.android.chuckfacts.presenter
 import com.bufolab.android.chuckfacts.domain.model.ChuckFact
 import com.bufolab.android.chuckfacts.domain.usecase.AcceptFact
 import com.bufolab.android.chuckfacts.domain.usecase.GetFacts
+import com.bufolab.android.chuckfacts.domain.usecase.GetSavedFacts
 import com.bufolab.android.chuckfacts.view.MainView
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
@@ -12,7 +13,8 @@ import javax.inject.Inject
  */
 
 open class  MainPresenterImpl  @Inject constructor(var getJokesUseCase: GetFacts,
-                                                   var acceptItem: AcceptFact): MainPresenter {
+                                                   var acceptItem: AcceptFact,
+                                                   var getSavedFacts: GetSavedFacts): MainPresenter {
 
     lateinit var mainview: MainView
 
@@ -35,13 +37,14 @@ open class  MainPresenterImpl  @Inject constructor(var getJokesUseCase: GetFacts
         acceptItem.setChuckFact(fact)
 
         val subscribe = acceptItem.execute()
+                .flatMap { getSavedFacts.execute() }
                 .subscribe {
-                    mainview.setAmountSavedJokes(it.toInt())
-                    requestItems(1)
+                    mainview.setAmountSavedJokes(it.size)
                 }
 
         composite.add(subscribe)
 
+        requestItems(1)
     }
 
     override fun onItemRejected(itemId: ChuckFact) {

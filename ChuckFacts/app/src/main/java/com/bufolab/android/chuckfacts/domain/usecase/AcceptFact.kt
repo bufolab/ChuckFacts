@@ -10,19 +10,19 @@ import javax.inject.Inject
 /**
  * Created by Bufolab on 12/08/2018.
  */
-class AcceptFact @Inject constructor(val repository: Repository, val schedulers: SchedulersProvider): UseCase<Int> {
+class AcceptFact @Inject constructor(val repository: Repository, val schedulers: SchedulersProvider): UseCase<Unit> {
 
     var fact: ChuckFact? = null
 
     fun setChuckFact(fact:ChuckFact){ this.fact = fact }
 
-    override fun execute(): Observable<Int> {
+    override fun execute(): Observable<Unit> {
         val arg =  checkNotNull(fact)
 
-        repository.saveChuckJoke(arg)
-
-        return repository.loadSavedChuckJoke().map { it ->it.size }
+        return repository.saveChuckJoke(arg)
                 .subscribeOn(schedulers.io)
                 .observeOn(schedulers.ui)
+
+
     }
 }
