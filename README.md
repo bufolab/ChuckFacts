@@ -12,7 +12,7 @@ Thanks to [ChuckNorris](https://github.com/chucknorris-io) for the Api
 
 ## MVP-RX
 The classic Model View Presenter following 
-[clean architecture(]https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html)
+[clean architecture](https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html)
 
 No IoC or DI applied in this branch (for the moment) so the coupling still exists.
 
