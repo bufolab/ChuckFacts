@@ -5,7 +5,7 @@ import com.bufolab.android.chuckfacts.domain.usecase.AcceptFact
 import com.bufolab.android.chuckfacts.domain.usecase.GetFacts
 import com.bufolab.android.chuckfacts.domain.usecase.GetSavedFacts
 import com.bufolab.android.chuckfacts.view.MainView
-import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 /**
@@ -19,14 +19,14 @@ open class  MainPresenterImpl  @Inject constructor(var getJokesUseCase: GetFacts
     lateinit var mainview: MainView
 
 
-    private var composite: MutableList<Disposable> = mutableListOf()
+    private var composite: CompositeDisposable = CompositeDisposable()
 
     override fun onInitialize() {
         requestItems(5)
     }
 
     override fun onFinish() {
-        composite.forEach { it.dispose() }
+        composite.clear()
     }
 
     override fun setView(view: MainView) {
