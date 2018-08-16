@@ -7,7 +7,6 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
-import com.bufolab.android.chuckfacts.data.LocalRepository
 import com.bufolab.android.chuckfacts.domain.model.ChuckFact
 import com.bufolab.android.chuckfacts.presenter.MainPresenter
 import com.bufolab.android.chuckfacts.view.ChuckFactAdapter
@@ -53,8 +52,6 @@ class MainActivity : AppCompatActivity(), MainView {
     //as we dont use dagger, we will initialize the Repository here. Should be in the Application.
     //but this is is just for fun.
     private fun initialization() {
-
-        LocalRepository(applicationContext)
 
         //inject dependencies
         ChuckFactsApplication.component.inject(this)

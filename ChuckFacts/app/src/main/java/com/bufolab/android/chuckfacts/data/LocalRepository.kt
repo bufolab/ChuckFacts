@@ -19,18 +19,6 @@ class LocalRepository(private val context: Context) : Repository {
     private val SAVED_FACTS = "SAVED_FACTS"
     private val KEY_NAME = "PREF_NAME"
 
-    init {
-        instance = this
-    }
-
-    companion object {
-        private var instance: Repository? = null
-
-        fun getInstance(): Repository {
-            if (instance == null) throw IllegalAccessException("Repository has not been initialized");
-            return instance!!
-        }
-    }
 
     override fun saveChuckJoke(fact: ChuckFact) : Observable<Unit> {
         val settings: SharedPreferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
