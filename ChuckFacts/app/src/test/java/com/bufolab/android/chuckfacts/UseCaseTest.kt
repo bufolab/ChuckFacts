@@ -64,9 +64,9 @@ class UseCaseTest {
         `when`(service.getRandomJoke()).thenReturn(Observable.fromIterable(mockedResponseData))
         getJokesuseCase = GetFacts(service,schedulerProvider)
 
-        `when`(repository.loadSavedChuckJoke()).thenReturn(
-                Observable.just(arrayListOf(ChuckFact("1",
-                        arrayListOf(),"","",""))))
+//        `when`(repository.loadSavedChuckJoke()).thenReturn(
+//                Observable.just(arrayListOf(ChuckFact("1",
+//                        arrayListOf(),"","",""))))
 
 
         acceptUseCase = AcceptFact(repository,schedulerProvider)
@@ -159,4 +159,7 @@ class UseCaseTest {
 
         verify(repository).saveChuckJoke(chuckJoke)
     }
+
+
+   
 }
