@@ -22,11 +22,15 @@ class LocalRepository(private val context: Context) : Repository {
 
     override fun saveChuckJoke(fact: ChuckFact) : Observable<Unit> {
         val settings: SharedPreferences = context.getSharedPreferences(KEY_NAME, Context.MODE_PRIVATE)
+        val editor = settings.edit()
 
         val toJson = Gson().toJson(fact)
         val stringSet = settings.getStringSet(SAVED_FACTS, mutableSetOf())
-        stringSet.add(toJson)
-        settings.edit().putStringSet(SAVED_FACTS, stringSet).apply()
+        //need to create new set since the original set got from sharedpreference must not be modified
+        val of:MutableSet<String> = mutableSetOf()
+        of.addAll(stringSet)
+        of.add(toJson)
+        editor.putStringSet(SAVED_FACTS, of).commit()
 
         return Observable.just(Unit)
     }
