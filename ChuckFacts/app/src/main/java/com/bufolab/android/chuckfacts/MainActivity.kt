@@ -9,6 +9,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import com.bufolab.android.chuckfacts.data.LocalRepository
 import com.bufolab.android.chuckfacts.domain.model.ChuckFact
+import com.bufolab.android.chuckfacts.presenter.MainPresenter
 import com.bufolab.android.chuckfacts.presenter.MainPresenterImpl
 import com.bufolab.android.chuckfacts.view.ChuckFactAdapter
 import com.bufolab.android.chuckfacts.view.DeckLayoutManager
@@ -23,7 +24,7 @@ class MainActivity : AppCompatActivity(), MainView {
 
 
     lateinit var stackFilmAdapter: ChuckFactAdapter
-    lateinit var mainViewPresenter: MainPresenterImpl
+    lateinit var mainViewPresenter: MainPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

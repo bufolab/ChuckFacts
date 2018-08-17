@@ -3,10 +3,9 @@ package com.bufolab.android.chuckfacts.presenter
 import com.bufolab.android.chuckfacts.domain.model.ChuckFact
 import com.bufolab.android.chuckfacts.domain.usecase.AcceptFact
 import com.bufolab.android.chuckfacts.domain.usecase.GetFacts
+import com.bufolab.android.chuckfacts.domain.usecase.GetSavedFacts
 import com.bufolab.android.chuckfacts.view.MainView
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 
 /**
  * Created by Bufolab on 12/08/2018.
@@ -26,10 +25,10 @@ open class MainPresenterImpl(val view: MainView) : MainPresenter {
 
 
     override fun onItemAccepted(fact: ChuckFact) {
-        val subscribe = AcceptFact(fact).execute()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe {
-                    view.setAmountSavedJokes(it.toInt())
+        val subscribe = AcceptFact(fact).execute().
+                flatMap { GetSavedFacts().execute() }
+                .subscribe {
+                    view.setAmountSavedJokes(it.size)
                     requestItems(1)
                 }
 

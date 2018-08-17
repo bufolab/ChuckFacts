@@ -11,14 +11,12 @@ import io.reactivex.schedulers.Schedulers
 /**
  * Created by Bufolab on 12/08/2018.
  */
-class AcceptFact(val fact: ChuckFact) : UseCase<Integer> {
+class AcceptFact(val fact: ChuckFact) : UseCase<Unit> {
 
     var repository: Repository = LocalRepository.getInstance()
 
-    override fun execute(): Observable<Integer> {
+    override fun execute(): Observable<Unit> {
         return repository.saveChuckJoke(fact)
-                .flatMap{  repository.loadSavedChuckJoke() }
-                .map { it -> Integer(it.size) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
     }
