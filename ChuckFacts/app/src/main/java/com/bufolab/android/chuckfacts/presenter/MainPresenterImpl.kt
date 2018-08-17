@@ -12,9 +12,9 @@ import javax.inject.Inject
  * Created by Bufolab on 12/08/2018.
  */
 
-open class  MainPresenterImpl  @Inject constructor(var getJokesUseCase: GetFacts,
-                                                   var acceptItem: AcceptFact,
-                                                   var getSavedFacts: GetSavedFacts): MainPresenter {
+open class MainPresenterImpl @Inject constructor(var getJokesUseCase: GetFacts,
+                                                 var acceptItem: AcceptFact,
+                                                 var getSavedFacts: GetSavedFacts) : MainPresenter {
 
     lateinit var mainview: MainView
 
@@ -23,6 +23,11 @@ open class  MainPresenterImpl  @Inject constructor(var getJokesUseCase: GetFacts
 
     override fun onInitialize() {
         requestItems(5)
+        getSavedFacts.execute()
+                .subscribe()
+        {
+            mainview.setAmountSavedJokes(it.size)
+        }
     }
 
     override fun onFinish() {
