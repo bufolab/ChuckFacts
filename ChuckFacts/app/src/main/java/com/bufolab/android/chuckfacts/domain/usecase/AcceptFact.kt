@@ -16,8 +16,8 @@ class AcceptFact(val fact: ChuckFact) : UseCase<Integer> {
     var repository: Repository = LocalRepository.getInstance()
 
     override fun execute(): Observable<Integer> {
-        repository.saveChuckJoke(fact)
-        return repository.loadSavedChuckJoke()
+        return repository.saveChuckJoke(fact)
+                .flatMap{  repository.loadSavedChuckJoke() }
                 .map { it -> Integer(it.size) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
